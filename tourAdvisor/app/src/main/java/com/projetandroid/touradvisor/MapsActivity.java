@@ -1,6 +1,5 @@
 package com.projetandroid.touradvisor;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,8 +17,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.projetandroid.touradvisor.databinding.ActivityMapsBinding;
-
-import org.jetbrains.annotations.NotNull;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -38,6 +34,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        //Etape 1 : Est ce qu'on a déjà la permission ?
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+//On a la permission
+        } else {
+//Etape 2 : On affiche la fenêtre de demande de permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] gr) {
+        super.onRequestPermissionsResult(requestCode, permissions, gr);
+//On verifie la réponse
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+//ON a la permission
+        }
+        else {
+//On n'a pas reçu la permission
+        }
     }
 
     /**
@@ -57,6 +76,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private Location getLastKnownLocation() {
+        //Contrôle de la permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_DENIED) {
+            return null;
+        }
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Location bestLocation = null;
+        //on teste chaque provider(réseau, GPS...) et on garde la localisation avec la meilleurs précision
+        for (String provider : lm.getProviders(true)) {
+            Location l = lm.getLastKnownLocation(provider);
+            if (l != null && (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy())) {
+                bestLocation = l;
+            }
+        }
+
+        return bestLocation;
+
     }
 
 }

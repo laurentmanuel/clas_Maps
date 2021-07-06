@@ -21,28 +21,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Etape 1 : Est ce qu'on a déjà la permission ?
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-//On a la permission
-        } else {
-//Etape 2 : On affiche la fenêtre de demande de permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] gr) {
-        super.onRequestPermissionsResult(requestCode, permissions, gr);
-//On verifie la réponse
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-//ON a la permission
-        }
-        else {
-//On n'a pas reçu la permission
-        }
-    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
