@@ -1,13 +1,20 @@
 package com.clas.webservice;
 
+import javax.persistence.*;
+
+@Entity
+@Table (name = "point")
 public class PointBean {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_point;
     private double lat_point;
     private double lon_point;
-    private int id_point;
 
+    //Constructeur vide obligatoire //Constructeur vide obligatoire
     public PointBean() {
     }
 
+    //Getter et Setter
     public double getLat_point() {
         return lat_point;
     }
