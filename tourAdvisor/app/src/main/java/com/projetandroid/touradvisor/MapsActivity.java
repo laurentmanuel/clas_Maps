@@ -7,8 +7,10 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -93,9 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 bestLocation = l;
             }
         }
-
         return bestLocation;
-
     }
 
 }
