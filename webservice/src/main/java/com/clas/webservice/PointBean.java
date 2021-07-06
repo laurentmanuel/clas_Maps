@@ -5,8 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table (name = "point")
 public class PointBean {
+    //@Id -> primary key / @GenerateValue (strategy = GenerationType.IDENTITY) -> pour l'auto Incrémentation
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_point;
+    private Integer id_point;
     private double lat_point;
     private double lon_point;
 
