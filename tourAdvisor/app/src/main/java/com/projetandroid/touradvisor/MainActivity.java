@@ -24,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+// Ici on va créer chaque onglet du Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_ID_MAPS, 0,"Maps");
         return super.onCreateOptionsMenu(menu);
     }
 
+    // Ici on va rediriger l'user vers l'onglet souhaité
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == MENU_ID_MAPS) {

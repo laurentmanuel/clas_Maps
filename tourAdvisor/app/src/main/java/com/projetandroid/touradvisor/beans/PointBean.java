@@ -5,6 +5,8 @@ public class PointBean {
     private double lat_point;
     private double lon_point;
 
+
+    // Getter & Setter
     public int getId_point() {
         return id_point;
     }
@@ -29,6 +31,7 @@ public class PointBean {
         this.lon_point = lon_point;
     }
 
+    // Constructor
     public PointBean(int id_point, double lat_point, double lon_point) {
         this.id_point = id_point;
         this.lat_point = lat_point;
