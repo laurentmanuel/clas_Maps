@@ -16,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.internal.ICameraUpdateFactoryDelegate;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.projetandroid.touradvisor.databinding.ActivityMapsBinding;
@@ -39,9 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Etape 1 : Est ce qu'on a déjà la permission ?
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-//On a la permission
-        } else {
+                != PackageManager.PERMISSION_GRANTED) {
 //Etape 2 : On affiche la fenêtre de demande de permission
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
@@ -51,14 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] gr) {
         super.onRequestPermissionsResult(requestCode, permissions, gr);
-//On verifie la réponse
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-//ON a la permission
-        }
-        else {
-//On n'a pas reçu la permission
-        }
+
+        refreshMap();
     }
 
     /**
@@ -73,10 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        }
+        refreshMap();
     }
 
     private Location getLastKnownLocation() {
@@ -97,4 +87,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return bestLocation;
     }
 
+    private void refreshMap(){
+        if(mMap == null) {
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+
+        }
+    }
 }
