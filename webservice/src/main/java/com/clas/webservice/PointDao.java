@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface PointDao extends JpaRepository<PointBean, Integer> {//<Bean, Typage Id>
 
-
-
 }
