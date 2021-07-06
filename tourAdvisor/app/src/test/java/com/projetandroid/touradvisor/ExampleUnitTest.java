@@ -1,4 +1,4 @@
-package com.example.touradvisor;
+package com.projetandroid.touradvisor;
 
 import org.junit.Test;
 
