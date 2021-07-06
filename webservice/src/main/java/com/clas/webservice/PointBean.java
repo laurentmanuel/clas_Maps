@@ -11,8 +11,13 @@ public class PointBean {
     private double lat_point;
     private double lon_point;
 
-    //Constructeur vide obligatoire //Constructeur vide obligatoire
+    //Constructeur vide obligatoire
     public PointBean() {
+    }
+
+    public PointBean(double lat_point, double lon_point) {
+        this.lat_point = lat_point;
+        this.lon_point = lon_point;
     }
 
     //Getter et Setter

@@ -3,9 +3,11 @@ package com.clas.webservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class MyRestController {
@@ -17,25 +19,23 @@ public class MyRestController {
     @GetMapping("/testPoint")
     public String testPoint(){
         System.out.println("/testPoint");
-
-        PointBean pt1 = new PointBean();
-        pointDao.save(pt1);
-
         return "Hello World !";
     }
 
     //récupérer la position des points
     //http://localhost:8080/getPoints
     @PostMapping("/getPoints")
-    public ArrayList<PointBean> getPoints(){
-        ArrayList<PointBean> listPoints = new ArrayList<PointBean>();
-        return listPoints;
+    public List<PointBean> getPoints(){
+        List<PointBean> pointlist = pointDao.findAll();
+        return pointlist;
     }
 
     //envoyer la position des points
     //http://localhost:8080/sendPoint
     @PostMapping("/sendPoint")
-    public void sendPoint(PointBean pointBean){
-
+    public void sendPoint(@RequestBody PointBean pointBean){
+        //controle
+        System.out.println("/sendPoint : lat > " + pointBean.getLat_point() + " & lon > " + pointBean.getLon_point());
+        pointDao.save(pointBean);
     }
 }
