@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,12 +35,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private TextView tvPopup;
 
+    //private ProgressBar progressBar;
+
     //data : liste des points (attention, bien garder le 'final')
     private final ArrayList<PointBean> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //ligne ci-dessous essentielle (sinon nullPointerException sur la progressBar) mais fait crasher l'app
+        // + ajouter une progressBar dans le fichier activity_maps.xml
+        //voir si les lignes progressBar commentées sont ok
+        //setContentView(R.layout.activity_maps);
+
+        //progressBar = findViewById(R.id.progressBar);
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -163,6 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Afficher un point sur la carte
     private void loadPoint(){
+        //showProgressBar(true);
 
         new Thread(() -> {
                 try {
@@ -174,8 +185,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //Affiche le detail de l'erreur dans la console
                     e.printStackTrace();
                 }
+            //showProgressBar(false);
         }).start();
 
     }
+
+    //public void showProgressBar(Boolean show) {
+    //    runOnUiThread(new Runnable() {
+    //        @Override
+    //        public void run() {
+    //            if (show) {
+    //                progressBar.setVisibility(View.VISIBLE);
+    //            } else {
+    //                progressBar.setVisibility(View.GONE);
+    //            }
+    //        }
+    //    });
+////
+    //}
 
 }
