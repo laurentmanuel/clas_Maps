@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-// Ici on va créer chaque onglet du Menu
+    // Ici on va créer chaque onglet du Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_ID_MAPS, 0,"Maps");

@@ -1,30 +1,41 @@
 package com.projetandroid.touradvisor;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.projetandroid.touradvisor.databinding.ActivityMapsBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.internal.ICameraUpdateFactoryDelegate;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.projetandroid.touradvisor.databinding.ActivityMapsBinding;
+import com.projetandroid.touradvisor.beans.PointBean;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import java.util.ArrayList;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+
+    //data : liste des points (attention, bien garder le 'final')
+    private final ArrayList<PointBean> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +52,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Etape 1 : Est ce qu'on a déjà la permission ?
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-//Etape 2 : On affiche la fenêtre de demande de permission
+        //Etape 2 : On affiche la fenêtre de demande de permission
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
+
+        //A supprimer : ceci est un test pour l'affichage d'un point sur la carte
+        PointBean pointBean = new PointBean(1.23, 0.56);
+        data.add(pointBean);
+        PointBean pointBean1 = new PointBean(1.29, 1.56);
+        data.add(pointBean1);
+
+        //afficher le.s point.s sur la carte
+        loadPoint();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] gr) {
         super.onRequestPermissionsResult(requestCode, permissions, gr);
-
         refreshMap();
     }
 
@@ -66,8 +85,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        //On indique qu'on souhaite customiser les popups des markers
+        //à utiliser avec getInfoWindow et getInfosContents
+        mMap.setInfoWindowAdapter(this);
+
         refreshMap();
     }
+
+    //Affichera la vue retournée, si null appelera getInfoContents
+    @Override
+    public View getInfoWindow(@NonNull Marker marker) {
+
+        return null;
+    }
+
+    //Affichera la vue retourné à l'interieur de l'infowindow.
+    @Override
+    public View getInfoContents(@NonNull Marker marker) {
+        return null;
+    }
+
 
     private Location getLastKnownLocation() {
         //Contrôle de la permission
@@ -92,10 +129,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+        //Dans runOnUiThread ??
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-
         }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMap.clear();
+
+                LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+                //Parcours de la liste data qui contient les points
+                for (int i = 0; i < data.size(); i++) {
+                    LatLng nvxPoint = new LatLng(data.get(i).getLat_point(), data.get(i).getLon_point());
+                    mMap.addMarker(new MarkerOptions().position(nvxPoint).title("Point n°" + i));
+                    latLngBounds.include(nvxPoint);
+                }
+                //Zoom sur les points de la carte (p.224 cours Android)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100));
+            }
+        });
     }
+
+    //Afficher un point sur la carte
+    private void loadPoint(){
+
+        new Thread(() -> {
+                try {
+                    //Appeler WSUtils pour afficher les points sur la carte
+
+                    //Mettre à jour l'IHM
+                    refreshMap();
+
+                } catch (Exception e) {
+                    //Affiche le detail de l'erreur dans la console
+                    e.printStackTrace();
+                }
+        }).start();
+
+    }
+
 }
