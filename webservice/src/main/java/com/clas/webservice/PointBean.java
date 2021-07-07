@@ -8,32 +8,32 @@ public class PointBean {
     //@Id -> primary key / @GenerateValue (strategy = GenerationType.IDENTITY) -> pour l'auto Incrémentation
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_point;
-    private double lat_point;
-    private double lon_point;
+    private Double lat_point;
+    private Double lon_point;
 
     //Constructeur vide obligatoire
     public PointBean() {
     }
 
-    public PointBean(double lat_point, double lon_point) {
+    public PointBean(Double lat_point, Double lon_point) {
         this.lat_point = lat_point;
         this.lon_point = lon_point;
     }
 
     //Getter et Setter
-    public double getLat_point() {
+    public Double getLat_point() {
         return lat_point;
     }
 
-    public void setLat_point(double lat_point) {
+    public void setLat_point(Double lat_point) {
         this.lat_point = lat_point;
     }
 
-    public double getLon_point() {
+    public Double getLon_point() {
         return lon_point;
     }
 
-    public void setLon_point(double lon_point) {
+    public void setLon_point(Double lon_point) {
         this.lon_point = lon_point;
     }
 

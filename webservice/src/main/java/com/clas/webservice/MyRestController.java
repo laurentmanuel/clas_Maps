@@ -34,19 +34,22 @@ public class MyRestController {
     //envoyer la position des points
     //http://localhost:8080/sendPoint
     @PostMapping("/sendPoint")
-    public ErrorBean sendPoint(@RequestBody PointBean pointBean, HttpServletResponse response) {
+    public ErrorBean sendPoint(@RequestBody PointBean point, HttpServletResponse response) {
+        System.out.println("/sendPoint : lat = " + point.getLat_point() + " & lon = " + point.getLon_point());
         try {
-            if ((pointBean.getLat_point() = null || pointBean.getLon_point() != null) && ()){
-                sendPoint();
-            }
-            throw new Exception("Coordonnées hors limites");
-
             //controle
-            System.out.println("/sendPoint : lat > " + pointBean.getLat_point() + " & lon > " + pointBean.getLon_point());
-            pointDao.save(pointBean);
+            if (point.getLon_point() == null || point.getLat_point() == null){
+            throw new Exception("Coordonnées nulles");
 
+            }   else if (point.getLon_point() < -90 || point.getLon_point() > 90 ||  point.getLat_point() < -90 || point.getLat_point() > 90) {
+                throw new Exception("Coordonnées hors limites");
+            }
+
+
+            pointDao.save(point);
             return null;
         }
+
         catch(Exception e) {
             e.printStackTrace();
             response.setStatus(COORDONNEES_INCORRECTES);
@@ -54,4 +57,5 @@ public class MyRestController {
         }
 
     }
+
 }
