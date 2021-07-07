@@ -2,13 +2,11 @@ package com.projetandroid.touradvisor;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +31,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+
+    private TextView tvPopup;
 
     //data : liste des points (attention, bien garder le 'final')
     private final ArrayList<PointBean> data = new ArrayList<>();
@@ -65,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //afficher le.s point.s sur la carte
         loadPoint();
+
     }
 
     @Override
@@ -95,15 +96,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Affichera la vue retournée, si null appelera getInfoContents
     @Override
     public View getInfoWindow(@NonNull Marker marker) {
-
         return null;
     }
 
-    //Affichera la vue retourné à l'interieur de l'infowindow.
+    //Affichera la vue retournée à l'interieur de l'infowindow.
     @Override
     public View getInfoContents(@NonNull Marker marker) {
-        return null;
+        //Layout de la fenêtre
+        //ajout d'un fichier marker_city.xml pour gérer la popup
+        View view = LayoutInflater.from(this).inflate(R.layout.marker_city, null);
+        tvPopup = (TextView) view.findViewById(R.id.tvPopup);
+        PointBean maPosition = (PointBean) marker.getTag();
+        tvPopup.setText(maPosition.toString());
+        return view;
     }
+
+
 
 
     private Location getLastKnownLocation() {
@@ -143,7 +151,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Parcours de la liste data qui contient les points
                 for (int i = 0; i < data.size(); i++) {
                     LatLng nvxPoint = new LatLng(data.get(i).getLat_point(), data.get(i).getLon_point());
-                    mMap.addMarker(new MarkerOptions().position(nvxPoint).title("Point n°" + i));
+                    //Ajout du 'marker' sur la carte + popup
+                    mMap.addMarker(new MarkerOptions().position(nvxPoint).title("Vous êtes ici : " + i)).setTag(data.get(i));
                     latLngBounds.include(nvxPoint);
                 }
                 //Zoom sur les points de la carte (p.224 cours Android)
@@ -161,7 +170,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     //Mettre à jour l'IHM
                     refreshMap();
-
                 } catch (Exception e) {
                     //Affiche le detail de l'erreur dans la console
                     e.printStackTrace();
