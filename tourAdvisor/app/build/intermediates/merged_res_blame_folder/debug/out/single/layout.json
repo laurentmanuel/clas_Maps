@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/laurentmanuel/Desktop/Adrar/Android/clas_Maps/tourAdvisor/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_main.xml",
+        "source": "/Users/laurentmanuel/Desktop/Adrar/Android/clas_Maps/tourAdvisor/app/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/laurentmanuel/Desktop/Adrar/Android/clas_Maps/tourAdvisor/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_maps.xml",
+        "source": "/Users/laurentmanuel/Desktop/Adrar/Android/clas_Maps/tourAdvisor/app/src/main/res/layout/activity_maps.xml"
+    }
+]

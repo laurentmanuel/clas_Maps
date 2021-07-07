@@ -1,0 +1,12 @@
+com/projetandroid/touradvisor/databinding/ActivityMapsBinding.java
+ com.projetandroid.touradvisor.databinding.ActivityMapsBinding
+com/projetandroid/touradvisor/databinding/ActivityMainBinding.java
+ com.projetandroid.touradvisor.databinding.ActivityMainBinding
+com/projetandroid/touradvisor/BuildConfig.java
+ com.projetandroid.touradvisor.BuildConfig
+com/projetandroid/touradvisor/beans/PointBean.java
+ com.projetandroid.touradvisor.beans.PointBean
+com/projetandroid/touradvisor/MainActivity.java
+ com.projetandroid.touradvisor.MainActivity
+com/projetandroid/touradvisor/MapsActivity.java
+ com.projetandroid.touradvisor.MapsActivity
