@@ -18,7 +18,7 @@ import static com.projetandroid.touradvisor.WSUtils.test;
 
 public class MainActivity extends AppCompatActivity {
     private final static int MENU_ID_MAPS = 1;
-    private static final String URL_TEST = "http://192.168.10.85:8080/testPoint";
+
     private TextView textView ;
 
     @Override
@@ -26,8 +26,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
-        textView.setText(test(URL_TEST));
 
+
+        callTest();
+
+    }
+
+    public void callTest(){
+        new Thread(() -> {
+            try {
+                String resultat = WSUtils.test();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(resultat);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(e.getMessage());
+                    }
+                });
+            }
+        }).start();
     }
 
 

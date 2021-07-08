@@ -15,7 +15,9 @@ public class OkhttpUtils {
     private static int CODE_ERROR_MIN = 200;
     private static int CODE_ERROR_MAX = 300;
 
-    public static String sendGetOkHttpRequest(String url) throws Exception {
+
+
+    public static String sendPostOkHttpRequest(String url) throws Exception {
 
         Log.w("tag", "url : " + url);
         OkHttpClient client = new OkHttpClient();

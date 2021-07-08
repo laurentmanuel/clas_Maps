@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.projetandroid.touradvisor.beans.PointBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
 
@@ -166,8 +167,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         new Thread(() -> {
                 try {
+                    WSUtils.getPoints();
                     //Appeler WSUtils pour afficher les points sur la carte
-
+                    data.clear();
+                    data.addAll(WSUtils.getPoints());
+                    System.out.println(WSUtils.getPoints()+" sdfsdfsfhgfdsrfdsfsgsdrfs!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     //Mettre à jour l'IHM
                     refreshMap();
                 } catch (Exception e) {
