@@ -12,14 +12,21 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import static com.projetandroid.touradvisor.WSUtils.test;
 
 public class MainActivity extends AppCompatActivity {
     private final static int MENU_ID_MAPS = 1;
+    private static final String URL_TEST = "http://192.168.10.85:8080/testPoint";
+    private TextView textView ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textView = findViewById(R.id.textView);
+        textView.setText(test(URL_TEST));
 
     }
 
