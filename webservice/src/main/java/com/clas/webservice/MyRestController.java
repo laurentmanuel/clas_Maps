@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 public class MyRestController {
     private int COORDONNEES_INCORRECTES = 518;
+    private int PT_INCORRECTS = 500;
 
     @Autowired
     private PointDao pointDao;
@@ -26,9 +27,17 @@ public class MyRestController {
     //récupérer la position des points
     //http://localhost:8889/getPoints
     @PostMapping("/getPoints")
-    public List<PointBean> getPoints(){
-        List<PointBean> pointlist = pointDao.findAll();
-        return pointlist;
+    public ErrorBean getPoints(HttpServletResponse response){
+        System.out.println("/getPoints ");
+        try{
+            List<PointBean> pointlist = pointDao.findAll();
+            return null;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            response.setStatus(PT_INCORRECTS);
+            return new ErrorBean("Erreur : " + e.getMessage());
+        }
     }
 
     //envoyer la position des points
