@@ -27,11 +27,11 @@ public class MyRestController {
     //récupérer la position des points
     //http://localhost:8889/getPoints
     @PostMapping("/getPoints")
-    public ErrorBean getPoints(HttpServletResponse response){
+    public Object getPoints(HttpServletResponse response){
         System.out.println("/getPoints ");
         try{
             List<PointBean> pointlist = pointDao.findAll();
-            return null;
+            return pointlist;
         }
         catch(Exception e) {
             e.printStackTrace();
