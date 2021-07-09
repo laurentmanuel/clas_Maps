@@ -58,15 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
 
-        //A supprimer : ceci est un test pour l'affichage d'un point sur la carte
-        PointBean pointBean = new PointBean(1.23, 0.56);
-        data.add(pointBean);
-        PointBean pointBean1 = new PointBean(1.29, 1.56);
-        data.add(pointBean1);
-
-        //afficher le.s point.s sur la carte
         loadPoint();
-
     }
 
     @Override
@@ -138,15 +130,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-        //Dans runOnUiThread ??
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        }
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mMap.clear();
+
+                //Dans runOnUiThread ??
+                if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
 
                 LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
                 //Parcours de la liste data qui contient les points
@@ -156,8 +148,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.addMarker(new MarkerOptions().position(nvxPoint).title("Vous êtes ici : " + i)).setTag(data.get(i));
                     latLngBounds.include(nvxPoint);
                 }
-                //Zoom sur les points de la carte (p.224 cours Android)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100));
+                if(data.size() > 1) {
+                    //Zoom sur les points de la carte (p.224 cours Android)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), 100));
+                }
             }
         });
     }
@@ -167,18 +161,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         new Thread(() -> {
                 try {
-                    WSUtils.getPoints();
                     //Appeler WSUtils pour afficher les points sur la carte
                     data.clear();
                     data.addAll(WSUtils.getPoints());
-                    System.out.println(WSUtils.getPoints()+" sdfsdfsfhgfdsrfdsfsgsdrfs!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     //Mettre à jour l'IHM
                     refreshMap();
                 } catch (Exception e) {
                     //Affiche le detail de l'erreur dans la console
                     e.printStackTrace();
+                    setErrorText(e.getMessage());
+
                 }
         }).start();
+
+    }
+
+    public void onBtSendClick(View view) {
+        setErrorText("");
+
+        Location location = getLastKnownLocation();
+        if(location == null) {
+            setErrorText("Pas de localisation");
+        }
+        else {
+            new Thread(() -> {
+                try {
+                    WSUtils.sendPoint(location.getLatitude(), location.getLongitude());
+                    loadPoint();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    setErrorText(e.getMessage());
+                }
+            }).start();
+        }
+
+    }
+
+
+    private void setErrorText(String errorMessage){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(errorMessage.trim().length() == 0) {
+                    binding.tvError.setVisibility(View.GONE);
+                }
+                else {
+                    binding.tvError.setVisibility(View.VISIBLE);
+                }
+                binding.tvError.setText(errorMessage);
+            }
+        });
+
+
+
 
     }
 
